@@ -15,11 +15,15 @@ namespace calculadora_basica
         public Form1()
         {
             InitializeComponent();
+            textBox1.Text = "0"; // inicializar en 0
         }
 
         private void button26_Click(object sender, EventArgs e)
         {
-            textBox1.Text = textBox1.Text + ".";
+            if (!textBox1.Text.Contains(".")) // evitar dos puntos decimales
+            {
+                textBox1.Text = textBox1.Text + ".";
+            }
         }
 
         private void button23_Click(object sender, EventArgs e)
@@ -30,25 +34,33 @@ namespace calculadora_basica
 
         private void button12_Click(object sender, EventArgs e)
         {
-            if (double.TryParse(textBox1.Text, out double valor))
+            if (double.TryParse(textBox1.Text, out double valor) && valor >= 0)
             {
                 textBox1.Text = Math.Sqrt(valor).ToString();
+            }
+            else
+            {
+                MessageBox.Show("Número inválido para raíz cuadrada");
             }
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
-           if(textBox1.TextLength == 1 ) textBox1.Text = "0";
-           else textBox1.Text = textBox1.Text.Substring(0, textBox1.TextLength-1);
+            if (textBox1.Text.Length > 1)
+                textBox1.Text = textBox1.Text.Substring(0, textBox1.TextLength - 1);
+            else
+                textBox1.Text = "0";
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
+
         string operador = "";
         double num1 = 0;
         double num2 = 0;
+
         private void button27_Click(object sender, EventArgs e)
         {
             textBox1.Text = "0";
@@ -59,61 +71,62 @@ namespace calculadora_basica
 
         private void btn1_Click(object sender, EventArgs e)
         {
-            if(textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "1";
+            if (textBox1.Text == "0") textBox1.Text = "";
+            textBox1.Text += "1";
         }
 
         private void btn2_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "2";
+            textBox1.Text += "2";
         }
 
         private void btn3_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "3";
+            textBox1.Text += "3";
         }
 
         private void btn4_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "4";
+            textBox1.Text += "4";
         }
 
         private void btn5_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "5";
+            textBox1.Text += "5";
         }
 
         private void btn6_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "6";
+            textBox1.Text += "6";
         }
 
         private void btn7_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "7";
+            textBox1.Text += "7";
         }
 
         private void btn8_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "8";
+            textBox1.Text += "8";
         }
 
         private void btn9_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "9";
+            textBox1.Text += "9";
         }
 
         private void btn0_Click(object sender, EventArgs e)
         {
-            textBox1.Text = textBox1.Text + "0";
+            if (textBox1.Text != "0") // evitar ceros a la izquierda
+                textBox1.Text += "0";
         }
 
         private void btnSuma_Click(object sender, EventArgs e)
@@ -146,7 +159,7 @@ namespace calculadora_basica
 
         private void btnIgual_Click(object sender, EventArgs e)
         {
-            num2 = Convert.ToDouble(textBox1.Text);
+            if (!double.TryParse(textBox1.Text, out num2)) return;
 
             double resultado = 0;
 
@@ -165,10 +178,16 @@ namespace calculadora_basica
                     if (num2 != 0)
                         resultado = num1 / num2;
                     else
+                    {
                         MessageBox.Show("No se puede dividir entre cero");
+                        return;
+                    }
                     break;
                 case "pow":
                     resultado = Math.Pow(num1, num2);
+                    break;
+                default:
+                    resultado = num2; // si no hay operador, mostrar lo ingresado
                     break;
             }
             textBox1.Text = resultado.ToString();
@@ -183,40 +202,41 @@ namespace calculadora_basica
         private void button21_Click(object sender, EventArgs e)
         {
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "00";
+            textBox1.Text += "00";
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
+            // los paréntesis no tienen lógica implementada, pero se dejan para futuras mejoras
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + ")";
+            textBox1.Text += ")";
         }
 
         double memoria = 0;
+
         private void btnM1_Click(object sender, EventArgs e)
         {
             if (double.TryParse(textBox1.Text, out double valor))
             {
                 memoria += valor;
-                textBox1.Clear();
+                textBox1.Text = "0";
             }
         }
 
-
         private void btnExp_Click(object sender, EventArgs e)
         {
-            string[] valores = textBox1.Text.Split('^');
             if (double.TryParse(textBox1.Text, out num1))
             {
                 operador = "pow";
-                textBox1.Clear();
+                textBox1.Text = "0";
             }
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
+            // mismo caso que los paréntesis de cierre
             if (textBox1.Text == "0") textBox1.Text = "";
-            textBox1.Text = textBox1.Text + "(";
+            textBox1.Text += "(";
         }
 
         private void btnM2_Click(object sender, EventArgs e)
@@ -224,14 +244,14 @@ namespace calculadora_basica
             if (double.TryParse(textBox1.Text, out double valor))
             {
                 memoria -= valor;
-                textBox1.Clear();
+                textBox1.Text = "0";
             }
         }
 
         private void btnM3_Click(object sender, EventArgs e)
         {
             memoria = 0;
-            textBox1.Clear();
+            textBox1.Text = "0";
         }
 
         private void btnM4_Click(object sender, EventArgs e)
@@ -249,6 +269,10 @@ namespace calculadora_basica
             if (double.TryParse(textBox1.Text, out double valor) && valor > 0)
             {
                 textBox1.Text = Math.Log10(valor).ToString();
+            }
+            else
+            {
+                MessageBox.Show("Número inválido para logaritmo");
             }
         }
     }
