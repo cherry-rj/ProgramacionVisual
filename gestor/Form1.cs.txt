@@ -1,0 +1,211 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace gestor_de_tareas
+{
+    public partial class Form1 : Form
+    {
+        List<Tarea> listaTarea = new List<Tarea>();
+        public Form1()
+
+
+        {
+            InitializeComponent();
+
+        }
+        private void ActualizarGrid()
+        {
+            Dgvtareas.DataSource = null;
+            Dgvtareas.DataSource = listaTarea;
+        }
+       
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LdlFecha_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void Dgvtareas_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                Txtcodigo.Text = Dgvtareas.Rows[e.RowIndex].Cells[0].Value.ToString();
+                Txtnombre.Text = Dgvtareas.Rows[e.RowIndex].Cells[1].Value.ToString();
+                Txtdescripcion.Text = Dgvtareas.Rows[e.RowIndex].Cells[2].Value.ToString();
+                Dtpfecha.Value = (DateTime)Dgvtareas.Rows[e.RowIndex].Cells[3].Value;
+                Txtlugar.Text = Dgvtareas.Rows[e.RowIndex].Cells[4].Value.ToString();
+                Cmdestado.SelectedItem = Dgvtareas.Rows[e.RowIndex].Cells[5].Value.ToString();
+            }
+        }
+
+        private void Lblbnombre_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Txtbunombre_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Btbuscarp_Click(object sender, EventArgs e)
+        {
+            string nombreBuscado = Txtbunombre.Text.Trim().ToLower();
+
+            if (!string.IsNullOrEmpty(nombreBuscado))
+            {
+                var resultado = listaTarea
+                    .Where(t => t.Nombre.ToLower().Contains(nombreBuscado))
+                    .ToList();
+
+                Dgvtareas.DataSource = null;
+                Dgvtareas.DataSource = resultado;
+            }
+            else
+            {
+                MessageBox.Show("Ingrese un nombre para buscar.");
+            }
+
+        }
+
+        private void lbldcodigo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Txtbucod_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Btbuscars_Click(object sender, EventArgs e)
+        {
+            string codigoBuscado = Txtbucod.Text.Trim().ToLower();
+
+            if (!string.IsNullOrEmpty(codigoBuscado))
+            {
+                var resultado = listaTarea
+                    .Where(t => t.Codigo.ToLower().Contains(codigoBuscado))
+                    .ToList();
+
+                Dgvtareas.DataSource = null;
+                Dgvtareas.DataSource = resultado;
+            }
+            else
+            {
+                MessageBox.Show("Ingrese un código para buscar.");
+            }
+
+        }
+
+        private void lbldinc_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Lbldfin_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Btnfiltrarfechas_Click(object sender, EventArgs e)
+        {
+            DateTime fechainc = dateTimePicker1.Value.Date;
+            DateTime fechaFin = dateTimePicker2.Value.Date;
+
+            if (fechainc > fechaFin)
+            {
+                MessageBox.Show("La fecha de inicio no puede ser mayor que la fecha final.");
+                return;
+            }
+
+            var resultado = listaTarea
+                .Where(t => t.Fecha.Date >= fechainc && t.Fecha.Date <= fechaFin)
+                .ToList();
+
+            Dgvtareas.DataSource = null;
+            Dgvtareas.DataSource = resultado;
+
+
+        }
+
+        private void Btmostrar_Click(object sender, EventArgs e)
+        {
+            Dgvtareas.DataSource = null;
+            Dgvtareas.DataSource = listaTarea;
+        }
+
+        private void Btnagregar_Click_1(object sender, EventArgs e)
+        {
+            Tarea nueva = new Tarea()
+            {
+                Codigo = Txtcodigo.Text,
+                Nombre = Txtnombre.Text,
+                Descripcion = Txtdescripcion.Text,
+                Fecha = Dtpfecha.Value,
+                Lugar = Txtlugar.Text,
+                Estado = Cmdestado.SelectedItem.ToString()
+            };
+
+            listaTarea.Add(nueva);
+            ActualizarGrid();
+            MessageBox.Show("Tarea agregada correctamente.");
+
+
+        }
+
+        private void Btneliminar_Click_1(object sender, EventArgs e)
+        {
+            if (Dgvtareas.SelectedRows.Count > 0)
+            {
+                int index = Dgvtareas.SelectedRows[0].Index;
+                listaTarea.RemoveAt(index);
+                ActualizarGrid();
+                MessageBox.Show("Tarea eliminada correctamente.");
+            }
+
+
+        }
+
+        private void Btneditar_Click_1(object sender, EventArgs e)
+        {
+            if (Dgvtareas.SelectedRows.Count > 0)
+            {
+                int index = Dgvtareas.SelectedRows[0].Index;
+                listaTarea[index].Codigo = Txtcodigo.Text;
+                listaTarea[index].Nombre = Txtnombre.Text;
+                listaTarea[index].Descripcion = Txtdescripcion.Text;
+                listaTarea[index].Fecha = Dtpfecha.Value;
+                listaTarea[index].Lugar = Txtlugar.Text;
+                listaTarea[index].Estado = Cmdestado.SelectedItem.ToString();
+
+                ActualizarGrid();
+                MessageBox.Show("Tarea editada correctamente.");
+            }
+
+        }
+    }
+}
